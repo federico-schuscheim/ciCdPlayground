@@ -4,12 +4,17 @@ on:
   push:
   pull_request:
   workflow_dispatch:
+    inputs:
+      version:
+        description: 'Tagging'
+        required: true
+        type: string
   
 permissions:
   checks: write
   pull-requests: write
   id-token: write
-  contents: read  # Only read needed for build
+  contents: write  # Only read needed for build
   pages: write
 
 jobs:
