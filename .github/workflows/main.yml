@@ -4,12 +4,6 @@ on:
   push:
   pull_request:
   workflow_dispatch:
-    # Add version input
-    inputs:
-      version:
-        description: 'Release version number'
-        required: true
-        type: string
   
 permissions:
   checks: write
@@ -37,30 +31,7 @@ jobs:
     - name: Integration tests
       run: yarn test:e2e
     - name: Publish Test Report
-      uses: EnricoMi/publish-unit-test-action@v1
+      uses: EnricoMi/publish-unit-test-report-action@v1
       if: always()
       with:
         files: '**/reports/**/*.xml'
-
-  # Add new tagging job that runs after successful build
-  tag-release:
-    runs-on: ubuntu-latest
-    needs: build  # Wait for build job to succeed
-    if: github.event_name == 'workflow_dispatch'  # Only run on manual dispatch
-    
-    # Elevated permissions required for tag push
-    permissions: 
-      contents: write  
-    
-    steps:
-    - name: Checkout code (full history)
-      uses: actions/checkout@v4
-      with:
-        fetch-depth: 0  # Required for tagging
-
-    - name: Create and push version tag
-      run: |
-        git config user.name "GitHub Actions"
-        git config user.email "actions@github.com"
-        git tag "${{ github.event.inputs.version}}"
-        git push origin "${{ github.event.inputs.version}}"
