@@ -41,7 +41,7 @@ jobs:
       with:
         files: '**/reports/**/*.xml'
     - name: Tag
-      if: github.event_name = 'workflow_dispatch'
+      if: github.event_name == 'workflow_dispatch'
       run: |
        git tag "${{ inputs.version }}"
        git push origin "${{ inputs.version }}"
